@@ -1,3 +1,4 @@
+ARG TOMCAT_BASE_IMAGE=9-jre8-openjdk-slim-bullseye
 ARG GEOSERVER_VERSION=2.19.6
 ARG GEOSERVER_DATA_DIR="/geoserver_data/data"
 
@@ -35,7 +36,8 @@ RUN wget --no-check-certificate https://repo1.maven.org/maven2/org/postgis/postg
 
 
 # Force a static tag (dockerfile best practice)
-FROM tomcat:9-jre8-openjdk-slim-bullseye
+# ARG TOMCAT_BASE_IMAGE
+FROM tomcat:${TOMCAT_BASE_IMAGE}
 LABEL GeoNode Development Team
 
 #
