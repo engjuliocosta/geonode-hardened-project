@@ -1,4 +1,4 @@
-ARG TOMCAT_BASE_IMAGE=9-jre8-openjdk-slim-bullseye
+ARG TOMCAT_BASE_IMAGE=9-jre8-openjdk-bullseye
 ARG GEOSERVER_VERSION=2.19.6
 ARG GEOSERVER_DATA_DIR="/geoserver_data/data"
 
