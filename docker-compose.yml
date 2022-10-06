@@ -25,15 +25,15 @@ services:
       dockerfile: Dockerfile
     container_name: django4${COMPOSE_PROJECT_NAME}
     healthcheck:
-      test: "curl --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://127.0.0.1:8001/"
+      test: "curl --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://127.0.0.1:8000/"
       interval: 60s
       timeout: 10s
       retries: 1
       start_period: 60s
     environment:
       - IS_CELERY=False
-    entrypoint: ["/usr/src/{{project_name}}/entrypoint.sh"]
-    command: "uwsgi --ini /usr/src/{{project_name}}/uwsgi.ini"
+    entrypoint: ["/entrypoint.sh"]
+    command: "uwsgi-cmd"
 
   # Celery worker that executes celery tasks created by Django.
   celery:
@@ -44,7 +44,7 @@ services:
       - django
     environment:
       - IS_CELERY=True
-    entrypoint: ["/usr/src/{{project_name}}/entrypoint.sh"]
+    entrypoint: ["/entrypoint.sh"]
     command: "celery-cmd"
 
   # Nginx is serving django static and media files and proxies to django and geonode
@@ -102,6 +102,7 @@ services:
       - data:/data
       - tmp:/tmp
     restart: unless-stopped
+    
   data-dir-conf:
     image: geonode/geoserver_data:2.19.6
     container_name: gsconf4${COMPOSE_PROJECT_NAME}

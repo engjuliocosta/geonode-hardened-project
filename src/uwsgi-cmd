@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+if [[ -z $VIRTUAL_ENV ]]
+then
+    source ./venv/bin/activate 
+fi
+
+# Execute uWSGI with dropped privileges
+uwsgi --uid=$(id -u geonode) --gid=$(id -g geonode) --ini ${GEONODE_HOME}/app/uwsgi.ini

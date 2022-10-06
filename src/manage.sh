@@ -1,2 +1,8 @@
+#!/bin/bash
+if [[ -z $VIRTUAL_ENV ]]
+then
+    source ./venv/bin/activate 
+fi
+
 . $HOME/.override_env
-/usr/local/bin/python /usr/src/{{project_name}}/manage.py $@
+python manage.py $@

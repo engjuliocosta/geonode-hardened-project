@@ -4,13 +4,21 @@
 set -e
 
 INVOKE_LOG_STDOUT=${INVOKE_LOG_STDOUT:-FALSE}
+INVOKE_LOG_FILE=invoke.log
+
 invoke () {
+    if [[ -z $VIRTUAL_ENV ]]
+    then
+        source ./venv/bin/activate 
+    fi
+
     if [ $INVOKE_LOG_STDOUT = 'true' ] || [ $INVOKE_LOG_STDOUT = 'True' ]
     then
-        /usr/local/bin/invoke $@
+        $(which invoke) $@
     else
-        /usr/local/bin/invoke $@ >> /usr/src/{{project_name}}/invoke.log 2>&1
+        $(which invoke) $@ >> ${INVOKE_LOG_FILE} 2>&1
     fi
+
     echo "$@ tasks done"
 }
 
@@ -25,7 +33,7 @@ echo "-----------------------------------------------------"
 
 invoke update
 
-source $HOME/.bashrc
+# Environment variables
 source $HOME/.override_env
 
 echo DOCKER_API_VERSION=$DOCKER_API_VERSION
@@ -78,7 +86,7 @@ else
         invoke prepare
 
         if [ ${FORCE_REINIT} = "true" ]  || [ ${FORCE_REINIT} = "True" ] || [ ! -e "/mnt/volumes/statics/geonode_init.lock" ]; then
-            echo "LOG INIT" > /usr/src/{{project_name}}/invoke.log
+            echo "LOG INIT" > ${INVOKE_LOG_FILE}
             invoke updategeoip
             invoke fixtures
             invoke monitoringfixture
