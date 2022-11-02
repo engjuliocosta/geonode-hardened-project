@@ -195,7 +195,10 @@ def migrations(ctx):
 @task
 def statics(ctx):
     print("**************************statics*******************************")
-    ctx.run('mkdir -p /mnt/volumes/statics/{static,uploads}')
+    static_root = os.environ.get('STATIC_ROOT', '/mnt/volumes/statics/static')
+    media_root = os.environ.get('MEDIA_ROOT', '/mnt/volumes/statics/uploads')
+    ctx.run(f'mkdir -p {static_root}')
+    ctx.run(f'mkdir -p {media_root} && chown -R $(id -u geonode):$(id -g geonode) {media_root}')
     ctx.run(f"python manage.py collectstatic --noinput --settings={_localsettings()}", pty=True)
 
 
