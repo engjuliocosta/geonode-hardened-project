@@ -9,7 +9,7 @@ INVOKE_LOG_FILE=invoke.log
 invoke () {
     if [[ -z $VIRTUAL_ENV ]]
     then
-        source ./venv/bin/activate 
+        source ${GEONODE_HOME}/venv/bin/activate 
     fi
 
     if [ $INVOKE_LOG_STDOUT = 'true' ] || [ $INVOKE_LOG_STDOUT = 'True' ]
