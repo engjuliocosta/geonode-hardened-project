@@ -107,7 +107,7 @@ RUN apt-get -y update && \
     rm -rf /var/lib/apt/lists/*
 
 # Create a geonode user and put shell to load the geonode virtualenv
-RUN set -xe && groupadd -g ${GEONODE_UID} geonode && \
+RUN groupadd -g ${GEONODE_UID} geonode && \
     useradd -g ${GEONODE_GID} -u ${GEONODE_UID} -m -d ${GEONODE_HOME} \
         -s /usr/sbin/nologin geonode && \
     # geonode dirs (logs, statics)
@@ -124,18 +124,14 @@ RUN set -xe && groupadd -g ${GEONODE_UID} geonode && \
 COPY --from=BUILDER ${GEONODE_HOME}/venv ${GEONODE_HOME}/venv
 
 # Copy geonode_project source code
-# TODO: Mover para o /var/lib/geonode-project e salvar
-# TODO: Usar o src do virtualenv
 COPY src ${GEONODE_HOME}/app/
 
 WORKDIR ${GEONODE_HOME}/app
 
 # Install GeoNode Project on RELEASE
-# RUN . ${GEONODE_HOME}/venv/bin/activate && \
-#     echo "Using Python: $(which python)" && sleep 10 && \
-#     # install geonode project (setup.py)
-#     python -m pip install --upgrade --no-cache -e . && \
-#     deactivate
+RUN . ${GEONODE_HOME}/venv/bin/activate && \
+    python -m pip install --upgrade --no-cache -e . && \
+    deactivate
 
 # Configure GeoNode project
 RUN chmod +x celery.sh celery-cmd uwsgi-cmd && \
